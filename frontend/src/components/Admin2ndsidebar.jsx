@@ -195,8 +195,7 @@ const Admin2ndsidebar = () => {
           {/* LOGOUT */}
           <button
             type="button"
-            onClick={() => goToPage("/")}
-            className="group flex w-full items-center justify-center gap-3 rounded-xl border border-red-500/30 bg-gradient-to-r from-neutral-900 to-slate-950 px-4 py-3 transition-all duration-200 hover:border-red-400 hover:from-red-950 hover:to-red-900 hover:shadow-[0_0_20px_rgba(239,68,68,0.2)] sm:py-4"
+onClick={() => navigate("/Home")}            className="group flex w-full items-center justify-center gap-3 rounded-xl border border-red-500/30 bg-gradient-to-r from-neutral-900 to-slate-950 px-4 py-3 transition-all duration-200 hover:border-red-400 hover:from-red-950 hover:to-red-900 hover:shadow-[0_0_20px_rgba(239,68,68,0.2)] sm:py-4"
           >
             <span className="text-xl transition-transform group-hover:scale-110">
               ↪

@@ -96,7 +96,7 @@ const Navbar = () => {
 
           {/* Menu Buttons */}
           <div className="hidden lg:flex items-center gap-2">
-            <button onClick={() => navigate("/")} className={linkClass}>
+            <button onClick={() => navigate("/Home")} className={linkClass}>
               Home
             </button>
 
@@ -120,7 +120,7 @@ const Navbar = () => {
           {/* Login / Signup */}
           <div className="flex items-center gap-3">
             <button
-              onClick={() => navigate("/Login")}
+              onClick={() => navigate("/")}
               className="
                 hidden sm:block
                 px-6 py-2.5

@@ -57,7 +57,7 @@ function Login() {
       <div className="relative w-full max-w-md">
         <button
           type="button"
-          onClick={() => window.history.back()}
+         onClick={() => navigate("/Home")}
           className="absolute -top-2 -right-2 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-xl font-bold text-slate-600 shadow-lg transition hover:bg-blue-700 hover:text-white"
         >
           ✕

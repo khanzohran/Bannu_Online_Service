@@ -193,7 +193,7 @@ if (response.data.success === true) {
           <p className="mt-7 text-center text-sm text-slate-500">
             Already have an account?
             <button
-              onClick={() => navigate("/Login")}
+              onClick={() => navigate("/")}
               type="button"
               className="ml-1 font-bold text-blue-600 hover:text-blue-800"
             >

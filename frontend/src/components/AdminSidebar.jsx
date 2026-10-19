@@ -165,8 +165,7 @@ function AdminSidebar() {
           <div className="border-t border-blue-500/30 pt-5">
             <button
               type="button"
-              onClick={handleLogout}
-              className="group flex w-full items-center justify-center gap-3 rounded-xl border border-red-500/30 bg-gradient-to-r from-neutral-900 to-neutral-950 px-4 py-3 transition-all duration-300 hover:border-red-500 hover:from-red-800 hover:to-red-700 hover:shadow-[0_0_20px_rgba(239,68,68,0.35)] sm:py-4"
+onClick={() => navigate("/Home")}              className="group flex w-full items-center justify-center gap-3 rounded-xl border border-red-500/30 bg-gradient-to-r from-neutral-900 to-neutral-950 px-4 py-3 transition-all duration-300 hover:border-red-500 hover:from-red-800 hover:to-red-700 hover:shadow-[0_0_20px_rgba(239,68,68,0.35)] sm:py-4"
             >
               <span className="text-xl">🚪</span>
               <span className="text-sm font-semibold uppercase tracking-widest text-red-400 transition-colors duration-300 group-hover:text-white">

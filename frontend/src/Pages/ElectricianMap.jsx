@@ -523,31 +523,7 @@ const ElectricianMap = () => {
 
                         {/* Buttons */}
                         <div className="mt-4 grid grid-cols-2 gap-3 border-t border-slate-100 pt-3">
-                          <button
-                            type="button"
-                            onClick={() =>
-                              navigate(
-                                `/ElectritionUpdate/${worker._id}`
-                              )
-                            }
-                            className="flex items-center justify-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-3 py-2.5 text-sm font-semibold text-blue-700 transition hover:bg-blue-100"
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="16"
-                              height="16"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="1.8"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            >
-                              <path d="M12 20h9" />
-                              <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L8 18l-4 1 1-4Z" />
-                            </svg>
-                            Update
-                          </button>
+                        
 
                           <button
                             type="button"

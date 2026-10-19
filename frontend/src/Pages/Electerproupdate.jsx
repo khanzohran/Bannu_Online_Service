@@ -20,6 +20,8 @@ const Electerproupdate = () => {
   const [saving, setSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [selectedImage, setSelectedImage] = useState(null);
+const [imagePreview, setImagePreview] = useState("");
 
   // Product fetch karein
   async function proupdate() {
@@ -246,34 +248,43 @@ const Electerproupdate = () => {
                   />
                 </div>
 
-                {/* IMAGE URL */}
-                <div className="md:col-span-2">
-                  <label className={labelClass}>Image URL</label>
+               {/* IMAGE FILE UPLOAD */}
+<div className="md:col-span-2">
+  <label className={labelClass}>Product Image</label>
 
-                  <input
-                    value={Electerupdate.Imageurl}
-                    onChange={(event) =>
-                      setElecterupdate({
-                        ...Electerupdate,
-                        Imageurl: event.target.value,
-                      })
-                    }
-                    type="url"
-                    placeholder="https://example.com/product-image.jpg"
-                    className={inputClass}
-                  />
+  <input
+    type="file"
+    accept="image/*"
+    onChange={(event) => {
+      const file = event.target.files?.[0];
 
-                  {Electerupdate.Imageurl && (
-                    <img
-                      src={Electerupdate.Imageurl}
-                      alt="Product preview"
-                      className="mt-4 h-32 w-32 rounded-xl border border-gray-200 object-contain"
-                      onError={(event) => {
-                        event.currentTarget.style.display = "none";
-                      }}
-                    />
-                  )}
-                </div>
+      if (file) {
+        setSelectedImage(file);
+        setImagePreview(URL.createObjectURL(file));
+      }
+    }}
+    className={`${inputClass} cursor-pointer file:mr-4 file:rounded-lg file:border-0 file:bg-blue-700 file:px-4 file:py-2 file:font-semibold file:text-white`}
+  />
+
+  {/* IMAGE PREVIEW */}
+  {imagePreview && (
+    <div className="mt-4">
+      <p className={labelClass}>Image Preview</p>
+
+      <img
+        src={imagePreview}
+        alt="Product preview"
+        className="h-40 w-40 rounded-xl border border-gray-200 bg-white object-contain p-2"
+      />
+    </div>
+  )}
+
+  {selectedImage && (
+    <p className="mt-2 text-sm text-gray-500">
+      Selected file: {selectedImage.name}
+    </p>
+  )}
+</div>
 
                 {/* PRICE */}
                 <div>

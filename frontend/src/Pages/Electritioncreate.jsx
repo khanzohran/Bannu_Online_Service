@@ -108,12 +108,7 @@ const Electritioncreate = () => {
       !electriwor.ContactNumber.trim() ||
       !electriwor.BelongsToShop.trim() ||
       !electriwor.ShopLocation.trim()
-    ) {
-      setErrorMessage(
-        "Name, contact number, shop name aur shop location required hain."
-      );
-      return;
-    }
+    )
 
     if (!electriwor.Image) {
       setErrorMessage("Electrician ki image select karo.");

@@ -41,7 +41,7 @@ function Login() {
         const role = response.data.Role;
         if (role === "admin") navigate("/Admindashbord");
         else if (role === "Shop") navigate("/onlineshopowerdashbord");
-        else navigate("/");
+        else navigate("/Home");
       } else {
         setError(response.data.msg || "Login nahi hua.");
       }

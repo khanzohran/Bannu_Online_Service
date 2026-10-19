@@ -57,7 +57,7 @@ function App() {
           <Route path="/Shop" element={<Shop />} />
           <Route path="/Contact" element={<Contact />} />
 
-          <Route path="/Login" element={<Login />} />
+          <Route path="/" element={<Login />} />
           <Route path="/SiginUp" element={<Registration />} />
 
           <Route path="/booking" element={<Bookings />} />
@@ -118,7 +118,7 @@ function App() {
           <Route path="/UserAllPlumberworker" element={<UserAllPlumberworker/>} />
           <Route path="/Userelectri" element={<Userelectri/>} />
           <Route path="/AdminAllworker" element={<AdminAllworker />} />
-          <Route path="*" element={<Home />} />
+          <Route path="/Home" element={<Home />} />
           
         </Routes>
       </main>

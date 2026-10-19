@@ -49,12 +49,19 @@ function Registration() {
         withCredentials: true,
       });
 
-      if (response.data.success === true) {
-        navigate("/shopregfram");
-      }
-       else {
-        setError(response.data.msg || "Signup nahi hua.");
-      }
+     
+if (response.data.success === true) {
+  if (signstate.Role === "User") {
+    navigate("/Home");
+  } else if (signstate.Role === "Shop") {
+    navigate("/shopregfram");
+  } else if (signstate.Role === "admin") {
+    navigate("/AdminSidebar");
+  }
+} else {
+  setError(response.data.msg || "Signup nahi hua.");
+}
+
     } catch (err) {
       setError(err.response?.data?.msg || "Server error, dobara try karo.");
     } finally {

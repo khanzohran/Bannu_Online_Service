@@ -44,6 +44,7 @@ import UserAllPlumberworker from "./Pages/UserAllPlumberworker.jsx";
 import Userelectri from "./Pages/Userelectri.jsx";
 import AdminAllworker from "./Pages/AdminAllworker";
 
+
 function App() {
   return (
     <BrowserRouter>
@@ -118,6 +119,7 @@ function App() {
           <Route path="/Userelectri" element={<Userelectri/>} />
           <Route path="/AdminAllworker" element={<AdminAllworker />} />
           <Route path="*" element={<Home />} />
+          
         </Routes>
       </main>
     </BrowserRouter>

@@ -17,7 +17,11 @@ import workerroute from "./Router/worker.route.js"
 
 const app = express();
 
-const allowedOrigins = [process.env.FRONTEND_URL, "http://localhost:5173"].filter(Boolean);
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  "https://bannu-online-service-xsrn.vercel.app",
+  "http://localhost:5173",
+].filter(Boolean).map((origin) => origin.replace(/\/+$/, ""));
 app.use(cors({
   origin(origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
@@ -31,6 +35,10 @@ app.use(cookieParser()); // routes se pehle
 
 dbConection();
 //CompessDB()
+
+app.get("/", (_req, res) => {
+  res.status(200).json({ success: true, message: "Backend connected successfully" });
+});
 
 app.use("/Login", Loginroute);
 app.use("/Electer", Electerroute);

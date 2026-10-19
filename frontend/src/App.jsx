@@ -117,6 +117,7 @@ function App() {
           <Route path="/UserAllPlumberworker" element={<UserAllPlumberworker/>} />
           <Route path="/Userelectri" element={<Userelectri/>} />
           <Route path="/AdminAllworker" element={<AdminAllworker />} />
+          <Route path="*" element={<Home />} />
         </Routes>
       </main>
     </BrowserRouter>

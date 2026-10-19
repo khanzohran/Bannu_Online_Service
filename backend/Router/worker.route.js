@@ -499,18 +499,57 @@ route.get("/ElectriuserApi",async function (req,res) {
 })
 
 
-route.get("/electribookApi", async function (req, res) {
-  let ebooking = await Workermodel.find();
+// =====================================
+// PUBLIC ELECTRICIAN API
+// Sirf electricians ka data
+// =====================================
+route.get("/electribookApi", async (req, res) => {
+  try {
+    const electricians = await Workermodel.find({
+      Electrician: true,
+      Plumber: false,
+    }).sort({ createdAt: -1 });
 
-  return res.json({
-    success: true,
-    msg: "The electri booking api is working",
-    ebooking: ebooking,
-  });
+    return res.status(200).json({
+      success: true,
+      count: electricians.length,
+      msg: "Electricians successfully load ho gaye.",
+      electricians,
+    });
+  } catch (error) {
+    console.error("Electrician Find Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      msg: "Electricians load nahi ho sake.",
+      error: error.message,
+    });
+  }
 });
 
-route.get("/plumbookApi" , async function (req,res) {
-    let pbooking=await Workermodel.find()
-    return res.json({success:true,msg:"The plum booking Api is wprking",pbooking:pbooking})
-})
+// =====================================
+// PUBLIC USER PLUMBER API
+// Sirf plumbers show honge
+// =====================================
+route.get("/plumberuserApi", async (req, res) => {
+  try {
+    const plumbers = await Workermodel.find({
+      Plumber: true,
+      Electrician: false,
+    }).sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      count: plumbers.length,
+      plumbers,
+    });
+  } catch (error) {
+    console.error("Public plumber find error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Plumbers load nahi ho sake.",
+    });
+  }
+});
 export default route;

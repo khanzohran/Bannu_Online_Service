@@ -315,7 +315,7 @@ const Admindashbord = () => {
             title="Recent Products"
             subtitle="Electrical aur plumbing products"
             count={filteredProducts.length}
-            onViewAll={() => navigate("/Allproduct")}
+            onViewAll={() => navigate("/AdminAllproduct")}
             loading={loading}
             emptyText="Koi product nahi mila."
           >
@@ -398,7 +398,7 @@ const Admindashbord = () => {
             title="Our Workers"
             subtitle="Electricians aur plumbers"
             count={filteredWorkers.length}
-            onViewAll={() => navigate("/Allworker")}
+            onViewAll={() => navigate("/AdminAllworker")}
             loading={loading}
             emptyText="Koi worker nahi mila."
           >

@@ -1,3 +1,4 @@
+
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -12,7 +13,7 @@ const UserAllPlumberworker = () => {
   const [error, setError] = useState("");
   const [failedImages, setFailedImages] = useState({});
 
-  // Fetch ONLY the plumbers returned by PlumberMap's API
+  // Sirf plumbers fetch karein
   const fetchPlumbers = useCallback(async () => {
     if (!API) {
       setError("Backend API URL .env file mein set nahi hai.");
@@ -25,23 +26,36 @@ const UserAllPlumberworker = () => {
       setError("");
 
       const response = await axios.get(
-        `${API}/workerroute/MyPlumberFindApi`,
-        {
-          withCredentials: true,
-        }
+        `${API}/workerroute/plumberuserApi`
       );
 
-      // Same endpoint and response data as PlumberMap
-      const workers = response.data?.workers;
-
-      if (!Array.isArray(workers)) {
+      if (response.data?.success !== true) {
         throw new Error(
           response.data?.message ||
-            "Backend se plumbers ka data nahi mila."
+            response.data?.msg ||
+            "Plumbers ka data load nahi hua."
         );
       }
 
-      setplumberstate(workers);
+      // Backend ke response se sirf plumbers lena
+      const plumbers = Array.isArray(response.data.plumbers)
+        ? response.data.plumbers
+        : Array.isArray(response.data.Electriuser)
+        ? response.data.Electriuser.filter(
+            (worker) =>
+              worker.Plumber === true &&
+              worker.Electrician !== true
+          )
+        : [];
+
+      // Safety filter: sirf plumber records
+      const onlyPlumbers = plumbers.filter(
+        (worker) =>
+          worker.Plumber === true &&
+          worker.Electrician !== true
+      );
+
+      setplumberstate(onlyPlumbers);
       setFailedImages({});
     } catch (err) {
       console.error(
@@ -49,22 +63,12 @@ const UserAllPlumberworker = () => {
         err.response?.data || err
       );
 
-      if (err.response?.status === 401) {
-        setError(
-          "Login session available nahi hai. Is API ke liye login zaroori hai."
-        );
-      } else if (err.response?.status === 403) {
-        setError(
-          "Aap ko plumbers dekhne ki permission nahi hai."
-        );
-      } else {
-        setError(
-          err.response?.data?.message ||
-            err.response?.data?.error ||
-            err.message ||
-            "Plumbers load nahi ho sake."
-        );
-      }
+      setError(
+        err.response?.data?.message ||
+          err.response?.data?.msg ||
+          err.message ||
+          "Plumbers load nahi ho sake."
+      );
 
       setplumberstate([]);
     } finally {
@@ -76,7 +80,7 @@ const UserAllPlumberworker = () => {
     fetchPlumbers();
   }, [fetchPlumbers]);
 
-  // Same location fields as PlumberMap
+  // Shop location
   const getShopLocation = (plumber) => {
     return (
       plumber.ShopLocation ||
@@ -87,7 +91,7 @@ const UserAllPlumberworker = () => {
     );
   };
 
-  // Open booking page for selected plumber
+  // Selected plumber ki booking
   const handleBooking = (plumber) => {
     navigate(`/PlumberBooking/${plumber._id}`, {
       state: { plumber },
@@ -109,7 +113,7 @@ const UserAllPlumberworker = () => {
           </button>
         </div>
 
-        {/* Page Header */}
+        {/* Header */}
         <div className="mb-8">
           <p className="text-xs font-bold uppercase tracking-[0.22em] text-blue-700">
             BANNU ONLINE SERVICES
@@ -119,9 +123,9 @@ const UserAllPlumberworker = () => {
             Book a Plumber
           </h1>
 
-          <p className="mt-2 text-sm leading-6 text-slate-500">
-            Apne area ke available plumbing service providers ke
-            profiles aur contact details dekhein.
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
+            Apne area ke plumbing service providers ki profiles,
+            contact details aur shop location dekhein.
           </p>
 
           {!loading && !error && (
@@ -159,6 +163,7 @@ const UserAllPlumberworker = () => {
         {loading && (
           <div className="rounded-2xl border border-slate-200 bg-white p-12 text-center shadow-sm">
             <div className="mx-auto h-9 w-9 animate-spin rounded-full border-4 border-blue-100 border-t-blue-700" />
+
             <p className="mt-4 text-sm font-medium text-slate-600">
               Loading plumbers...
             </p>
@@ -168,20 +173,14 @@ const UserAllPlumberworker = () => {
         {/* Error */}
         {!loading && error && (
           <div className="rounded-2xl border border-red-200 bg-white p-8 text-center shadow-sm">
-            <div className="text-3xl">!</div>
-
-            <h2 className="mt-3 text-lg font-bold text-slate-900">
-              Unable to Load Plumbers
-            </h2>
-
-            <p className="mx-auto mt-2 max-w-lg break-words text-sm text-red-600">
+            <p className="font-semibold text-red-600">
               {error}
             </p>
 
             <button
               type="button"
               onClick={fetchPlumbers}
-              className="mt-5 rounded-xl bg-blue-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-800"
+              className="mt-4 rounded-xl bg-blue-700 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-800"
             >
               Try Again
             </button>
@@ -189,119 +188,172 @@ const UserAllPlumberworker = () => {
         )}
 
         {/* Empty State */}
-        {!loading && !error && plumberstate.length === 0 && (
-          <div className="rounded-2xl border border-slate-200 bg-white px-5 py-16 text-center shadow-sm">
-            <div className="text-5xl">🔧</div>
+        {!loading &&
+          !error &&
+          plumberstate.length === 0 && (
+            <div className="rounded-2xl border border-slate-200 bg-white px-6 py-14 text-center shadow-sm">
+              <div className="text-5xl">🔧</div>
 
-            <h2 className="mt-4 text-xl font-bold text-slate-900">
-              No Plumbers Found
-            </h2>
+              <h2 className="mt-4 text-xl font-bold text-slate-900">
+                No Plumbers Available
+              </h2>
 
-            <p className="mt-2 text-sm text-slate-500">
-              Abhi koi plumber available nahi hai.
-            </p>
-          </div>
-        )}
+              <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">
+                Abhi koi plumber available nahi hai. Plumber create
+                hone ke baad woh yahan show hoga.
+              </p>
 
-        {/* ONLY plumbers returned by MyPlumberFindApi */}
-        {!loading && !error && plumberstate.length > 0 && (
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
-            {plumberstate.map((plumber) => {
-              const imageUrl =
-                typeof plumber.Image === "string"
-                  ? plumber.Image.trim()
-                  : "";
+              <button
+                type="button"
+                onClick={fetchPlumbers}
+                className="mt-5 rounded-xl bg-blue-700 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-800"
+              >
+                Refresh
+              </button>
+            </div>
+          )}
 
-              const imageFailed =
-                !imageUrl || failedImages[plumber._id];
+        {/* Plumber Cards */}
+        {!loading &&
+          !error &&
+          plumberstate.length > 0 && (
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
+              {plumberstate.map((plumber) => {
+                const imageUrl =
+                  typeof plumber.Image === "string"
+                    ? plumber.Image.trim()
+                    : "";
 
-              return (
-                <article
-                  key={plumber._id}
-                  className="group flex min-w-0 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg"
-                >
-                  {/* Plumber Image */}
-                  <div className="relative h-52 overflow-hidden bg-slate-100">
-                    {!imageFailed ? (
-                      <img
-                        src={imageUrl}
-                        alt={plumber.Name || "Plumber"}
-                        loading="lazy"
-                        onError={() =>
-                          setFailedImages((prev) => ({
-                            ...prev,
-                            [plumber._id]: true,
-                          }))
-                        }
-                        className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                      />
-                    ) : (
-                      <div className="flex h-full flex-col items-center justify-center gap-2 text-slate-400">
-                        <span className="text-5xl">🔧</span>
-                        <span className="text-xs">
-                          Image not available
-                        </span>
-                      </div>
-                    )}
+                const imageFailed =
+                  !imageUrl || failedImages[plumber._id];
 
-                    <span className="absolute left-4 top-4 rounded-full border border-slate-200 bg-white/95 px-3 py-1.5 text-xs font-bold text-blue-700 shadow-sm">
-                      PLUMBER
-                    </span>
-                  </div>
+                return (
+                  <article
+                    key={plumber._id}
+                    className="group flex min-w-0 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg"
+                  >
+                    {/* Image */}
+                    <div className="relative h-52 overflow-hidden bg-slate-100">
+                      {!imageFailed ? (
+                        <img
+                          src={imageUrl}
+                          alt={plumber.Name || "Plumber"}
+                          loading="lazy"
+                          onError={() =>
+                            setFailedImages((prev) => ({
+                              ...prev,
+                              [plumber._id]: true,
+                            }))
+                          }
+                          className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                        />
+                      ) : (
+                        <div className="flex h-full flex-col items-center justify-center gap-2 text-slate-400">
+                          <span className="text-5xl">🔧</span>
+                          <span className="text-xs">
+                            Image not available
+                          </span>
+                        </div>
+                      )}
 
-                  {/* Plumber Details */}
-                  <div className="flex flex-1 flex-col p-5">
-                    <h2 className="break-words text-xl font-bold text-slate-900">
-                      {plumber.Name || "Professional Plumber"}
-                    </h2>
+                      <span className="absolute left-4 top-4 rounded-full border border-slate-200 bg-white/95 px-3 py-1.5 text-xs font-bold text-blue-700 shadow-sm">
+                        PLUMBER
+                      </span>
+                    </div>
 
-                    <p className="mt-1 text-xs font-medium text-slate-400">
-                      Plumbing Service Provider
-                    </p>
+                    {/* Details */}
+                    <div className="flex flex-1 flex-col p-5">
+                      <h2 className="break-words text-xl font-bold text-slate-900">
+                        {plumber.Name || "Professional Plumber"}
+                      </h2>
 
-                    {/* Contact Number */}
-                    <div className="mt-5 flex items-center gap-3">
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-700">
-                        <svg
-                          width="19"
-                          height="19"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="1.8"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.96.35 1.9.7 2.8a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.35 1.84.58 2.8.7A2 2 0 0 1 22 16.92z" />
-                        </svg>
-                      </div>
+                      <p className="mt-1 text-xs font-medium text-slate-400">
+                        Plumbing Service Provider
+                      </p>
 
-                      <div className="min-w-0">
-                        <p className="text-xs text-slate-400">
-                          Contact Number
-                        </p>
-
-                        {plumber.ContactNumber ? (
-                          <a
-                            href={`tel:${plumber.ContactNumber}`}
-                            className="break-all text-sm font-semibold text-slate-700 hover:text-blue-700"
+                      {/* Contact */}
+                      <div className="mt-5 flex items-center gap-3">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-700">
+                          <svg
+                            width="19"
+                            height="19"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.8"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
                           >
-                            {plumber.ContactNumber}
-                          </a>
-                        ) : (
-                          <p className="text-sm text-slate-500">
-                            Not provided
-                          </p>
-                        )}
-                      </div>
-                    </div>
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.96.35 1.9.7 2.8a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.35 1.84.58 2.8.7A2 2 0 0 1 22 16.92z" />
+                          </svg>
+                        </div>
 
-                    {/* Shop Location */}
-                    <div className="mt-4 flex items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-blue-700 shadow-sm">
+                        <div className="min-w-0">
+                          <p className="text-xs text-slate-400">
+                            Contact Number
+                          </p>
+
+                          {plumber.ContactNumber ? (
+                            <a
+                              href={`tel:${plumber.ContactNumber}`}
+                              className="break-all text-sm font-semibold text-slate-700 hover:text-blue-700"
+                            >
+                              {plumber.ContactNumber}
+                            </a>
+                          ) : (
+                            <p className="text-sm text-slate-500">
+                              Not provided
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Location */}
+                      <div className="mt-4 flex items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-blue-700 shadow-sm">
+                          <svg
+                            width="19"
+                            height="19"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.8"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z" />
+                            <circle cx="12" cy="10" r="2.5" />
+                          </svg>
+                        </div>
+
+                        <div className="min-w-0">
+                          <p className="text-xs text-slate-500">
+                            Shop Location
+                          </p>
+
+                          <p className="mt-1 break-words text-sm font-semibold leading-5 text-slate-800">
+                            {getShopLocation(plumber)}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Description */}
+                      <p className="mt-4 whitespace-pre-line break-words text-sm leading-6 text-slate-500">
+                        {plumber.Description ||
+                          "Contact this plumber for more information about available services."}
+                      </p>
+
+                      {/* Booking */}
+                      <button
+                        type="button"
+                        onClick={() => handleBooking(plumber)}
+                        className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-blue-700 px-5 py-3.5 text-sm font-bold text-white shadow-sm transition hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-100"
+                      >
+                        Booking Now
+
                         <svg
-                          width="19"
-                          height="19"
+                          width="18"
+                          height="18"
                           viewBox="0 0 24 24"
                           fill="none"
                           stroke="currentColor"
@@ -309,56 +361,16 @@ const UserAllPlumberworker = () => {
                           strokeLinecap="round"
                           strokeLinejoin="round"
                         >
-                          <path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z" />
-                          <circle cx="12" cy="10" r="2.5" />
+                          <path d="M5 12h14" />
+                          <path d="m12 5 7 7-7 7" />
                         </svg>
-                      </div>
-
-                      <div className="min-w-0">
-                        <p className="text-xs text-slate-500">
-                          Shop Location
-                        </p>
-
-                        <p className="mt-1 break-words text-sm font-semibold leading-5 text-slate-800">
-                          {getShopLocation(plumber)}
-                        </p>
-                      </div>
+                      </button>
                     </div>
-
-                    {/* Description */}
-                    <p className="mt-4 whitespace-pre-line break-words text-sm leading-6 text-slate-500">
-                      {plumber.Description ||
-                        "Contact this plumber for more information about available services."}
-                    </p>
-
-                    {/* Booking Button */}
-                    <button
-                      type="button"
-                      onClick={() => handleBooking(plumber)}
-                      className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-blue-700 px-5 py-3.5 text-sm font-bold text-white shadow-sm transition hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-100"
-                    >
-                      Booking Now
-
-                      <svg
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.8"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M5 12h14" />
-                        <path d="m12 5 7 7-7 7" />
-                      </svg>
-                    </button>
-                  </div>
-                </article>
-              );
-            })}
-          </div>
-        )}
+                  </article>
+                );
+              })}
+            </div>
+          )}
       </div>
     </div>
   );

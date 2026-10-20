@@ -14,7 +14,6 @@ import Electerorder from "./Router/Electerorder.route.js";
 import plumborderroute from "./Router/plumborder.route.js";
 import sellerroute from "./Router/Selller.route.js"
 import workerroute from "./Router/worker.route.js"
-import Contectroute from "./Router/Contect.route.js";
 const app = express();
 
 const allowedOrigins = [
@@ -49,7 +48,7 @@ app.use("/Electerorder", Electerorder);
 app.use("/plumborder", plumborderroute);
 app.use("/sellerroute",sellerroute)
 app.use("/workerroute",workerroute)
-app.use("/Contectroute", Contectroute);
+
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

@@ -1,6 +1,6 @@
 
 import express from "express";
-import contactmodel from "../model/contact.js";
+
 
 let route = express.Router();
 

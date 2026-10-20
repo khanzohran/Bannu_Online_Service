@@ -79,15 +79,7 @@ function Home() {
         </div>
       </section>
 
-      {/* ================= TRUST STRIP ================= */}
-      <section className="border-b border-slate-200 bg-white">
-        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-6 px-5 py-8 sm:px-8 md:grid-cols-4">
-          <p className="flex items-center gap-3 text-sm font-semibold text-slate-700"><span className="text-blue-500">◆</span>Easy online booking</p>
-          <p className="flex items-center gap-3 text-sm font-semibold text-slate-700"><span className="text-blue-500">◆</span>Genuine quality products</p>
-          <p className="flex items-center gap-3 text-sm font-semibold text-slate-700"><span className="text-blue-500">◆</span>Local, reliable team</p>
-          <p className="flex items-center gap-3 text-sm font-semibold text-slate-700"><span className="text-blue-500">◆</span>Clear and fair pricing</p>
-        </div>
-      </section>
+     
 
       {/* ================= FEATURED PRODUCTS ================= */}
       <section className="bg-white py-20 sm:py-28">
@@ -112,7 +104,7 @@ function Home() {
                 <p className="mt-1 text-sm text-slate-500">Copper core, 90m coil</p>
                 <div className="mt-5 flex items-center justify-between">
                   <span className="serif text-2xl font-bold text-[#0B1426]">Rs. 3,200</span>
-                  <Link to="/shop" className="rounded-full bg-[#0B1426] px-4 py-2.5 text-xs font-bold text-white transition hover:bg-[#2563EB]">View</Link>
+                  <Link to="/ElectricalShop" className="rounded-full bg-[#0B1426] px-4 py-2.5 text-xs font-bold text-white transition hover:bg-[#2563EB]">View</Link>
                 </div>
               </div>
             </article>
@@ -128,7 +120,7 @@ function Home() {
                 <p className="mt-1 text-sm text-slate-500">Modern finish, fire-retardant</p>
                 <div className="mt-5 flex items-center justify-between">
                   <span className="serif text-2xl font-bold text-[#0B1426]">Rs.800</span>
-                  <Link to="/shop" className="rounded-full bg-[#0B1426] px-4 py-2.5 text-xs font-bold text-white transition hover:bg-[#2563EB]">View</Link>
+                  <Link to="/ElectricalShop" className="rounded-full bg-[#0B1426] px-4 py-2.5 text-xs font-bold text-white transition hover:bg-[#2563EB]">View</Link>
                 </div>
               </div>
             </article>
@@ -144,7 +136,7 @@ function Home() {
                 <p className="mt-1 text-sm text-slate-500">Hight-5m,wight-1 inche </p>
                 <div className="mt-5 flex items-center justify-between">
                   <span className="serif text-2xl font-bold text-[#0B1426]">Rs. 400 for one pice</span>
-                  <Link to="/shop" className="rounded-full bg-[#0B1426] px-4 py-2.5 text-xs font-bold text-white transition hover:bg-[#2563EB]">View</Link>
+                  <Link to="/PlumbingShop" className="rounded-full bg-[#0B1426] px-4 py-2.5 text-xs font-bold text-white transition hover:bg-[#2563EB]">View</Link>
                 </div>
               </div>
             </article>
@@ -160,7 +152,7 @@ function Home() {
                 <p className="mt-1 text-sm text-slate-500"> 1 year warranty</p>
                 <div className="mt-5 flex items-center justify-between">
                   <span className="serif text-2xl font-bold text-[#0B1426]">Rs.100</span>
-                  <Link to="/shop" className="rounded-full bg-[#0B1426] px-4 py-2.5 text-xs font-bold text-white transition hover:bg-[#2563EB]">View</Link>
+                  <Link to="/PlumbingShop" className="rounded-full bg-[#0B1426] px-4 py-2.5 text-xs font-bold text-white transition hover:bg-[#2563EB]">View</Link>
                 </div>
               </div>
             </article>
@@ -178,95 +170,75 @@ function Home() {
           </div>
 
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {/* Pro 1 */}
-            <article className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 backdrop-blur transition hover:border-[#2563EB]/60">
-              <div className="flex items-center gap-4">
-                <div className="serif flex h-16 w-16 items-center justify-center rounded-full border border-[#2563EB] bg-[#13213D] text-2xl font-semibold text-[#93B8FF]">AK</div>
-                <div>
-                  <h3 className="font-bold text-white">Ahmad Khan</h3>
-                  <p className="text-sm text-[#93B8FF]">Electrician</p>
-                </div>
+          
+             
+            <article className="group overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] transition hover:border-[#2563EB] hover:shadow-xl">
+              <div className="relative overflow-hidden">
+                <img src="https://res.cloudinary.com/sgoy94v2/image/upload/v1792473842/bannu-online-services/workers/lcbbcoewi4irrrnpeord.jpg" />
+                <span className="absolute left-4 top-4 rounded-full bg-[#0B1426] px-3 py-1.5 text-xs font-semibold text-[#93B8FF]">Electrician</span>
               </div>
-              <div className="mt-5 flex items-center gap-2 text-sm text-slate-300">
-                <span className="text-blue-500">★★★★★</span> <span>4.9</span>
-                <span className="text-slate-500">(640 jobs)</span>
-              </div>
-              <p className="mt-3 text-sm text-slate-400">12 years of experience</p>
-              <div className="mt-6 flex items-center justify-between border-t border-white/10 pt-5">
-                <div>
-                  <p className="text-xs text-slate-400">Visit charge</p>
-                  <p className="serif text-2xl font-semibold text-white">Rs. 800 </p>
+              <div className="p-5">
+                <h3 className="font-bold text-white">Jalal Ustaad</h3>
+                <p className="mt-1 text-sm text-slate-500">I am a bast Ustaad for Electrical works
+
+ </p>
+                <div className="mt-5 flex items-center justify-between">
+                <Link to="/Userelectri" className="rounded-full bg-gradient-to-br from-blue-500 to-blue-700 px-5 py-2.5 text-xs font-bold text-white transition hover:brightness-110">Book now</Link>
                 </div>
-                <Link to="/Electrition" className="rounded-full bg-gradient-to-br from-blue-500 to-blue-700 px-5 py-2.5 text-xs font-bold text-white transition hover:brightness-110">Book now</Link>
               </div>
             </article>
+           
+             {/* Pro 4 */}
+           
+            <article className="group overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] transition hover:border-[#2563EB] hover:shadow-xl">
+              <div className="relative overflow-hidden">
+                <img src="https://res.cloudinary.com/sgoy94v2/image/upload/v1792474093/bannu-online-services/workers/hgrzeiwtptwn3gbqfdqu.png" />
+                <span className="absolute left-4 top-4 rounded-full bg-[#0B1426] px-3 py-1.5 text-xs font-semibold text-[#93B8FF]">Plumber
 
-            {/* Pro 2 */}
-            <article className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 backdrop-blur transition hover:border-[#2563EB]/60">
-              <div className="flex items-center gap-4">
-                <div className="serif flex h-16 w-16 items-center justify-center rounded-full border border-[#2563EB] bg-[#13213D] text-2xl font-semibold text-[#93B8FF]">IA</div>
-                <div>
-                  <h3 className="font-bold text-white">Imran Ali</h3>
-                  <p className="text-sm text-[#93B8FF]">Electrician</p>
-                </div>
+                </span>
               </div>
-              <div className="mt-5 flex items-center gap-2 text-sm text-slate-300">
-                <span className="text-blue-500">★★★★★</span> <span>4.8</span>
-                <span className="text-slate-500">(410 jobs)</span>
-              </div>
-              <p className="mt-3 text-sm text-slate-400">8 years of experience</p>
-              <div className="mt-6 flex items-center justify-between border-t border-white/10 pt-5">
-                <div>
-                  <p className="text-xs text-slate-400">Visit charge</p>
-                  <p className="serif text-2xl font-semibold text-white">Rs. 500</p>
+              <div className="p-5">
+                <h3 className="font-bold text-white">Sher nadim</h3>
+                <p className="mt-1 text-sm text-slate-500">The 15 year Experience for Electrician work
+
+ </p>
+                <div className="mt-5 flex items-center justify-between">
+                <Link to="/UserAllPlumberworker" className="rounded-full bg-gradient-to-br from-blue-500 to-blue-700 px-5 py-2.5 text-xs font-bold text-white transition hover:brightness-110">Book now</Link>
                 </div>
-                <Link to="/Electrition" className="rounded-full bg-gradient-to-br from-blue-500 to-blue-700 px-5 py-2.5 text-xs font-bold text-white transition hover:brightness-110">Book now</Link>
               </div>
             </article>
-
             {/* Pro 3 */}
-            <article className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 backdrop-blur transition hover:border-[#2563EB]/60">
-              <div className="flex items-center gap-4">
-                <div className="serif flex h-16 w-16 items-center justify-center rounded-full border border-[#2563EB] bg-[#13213D] text-2xl font-semibold text-[#93B8FF]">ZU</div>
-                <div>
-                  <h3 className="font-bold text-white">Zahid Ullah</h3>
-                  <p className="text-sm text-[#93B8FF]">Plumber</p>
-                </div>
+            
+            <article className="group overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] transition hover:border-[#2563EB] hover:shadow-xl">
+              <div className="relative overflow-hidden h-70">
+                <img src="https://res.cloudinary.com/sgoy94v2/image/upload/v1792429805/bannu-online-services/workers/m3aiqb767cxzbwubpjbm.jpg" />
+                <span className="absolute left-4 top-4 rounded-full bg-[#0B1426] px-3 py-1.5 text-xs font-semibold text-[#93B8FF]">Plumber</span>
               </div>
-              <div className="mt-5 flex items-center gap-2 text-sm text-slate-300">
-                <span className="text-blue-500">★★★★★</span> <span>4.9</span>
-                <span className="text-slate-500">(780 jobs)</span>
-              </div>
-              <p className="mt-3 text-sm text-slate-400">15 years of experience</p>
-              <div className="mt-6 flex items-center justify-between border-t border-white/10 pt-5">
-                <div>
-                  <p className="text-xs text-slate-400">Visit charge</p>
-                  <p className="serif text-2xl font-semibold text-white">Rs.900</p>
+              <div className="p-5">
+                <h3 className="font-bold text-white">Dil nawez</h3>
+                <p className="mt-1 text-sm text-slate-500">The 10 year Experience for  work
+
+ </p>
+                <div className="mt-5 flex items-center justify-between">
+                <Link to="/UserAllPlumberworker" className="rounded-full bg-gradient-to-br from-blue-500 to-blue-700 px-5 py-2.5 text-xs font-bold text-white transition hover:brightness-110">Book now</Link>
                 </div>
-                <Link to="/PlumberBooking" className="rounded-full bg-gradient-to-br from-blue-500 to-blue-700 px-5 py-2.5 text-xs font-bold text-white transition hover:brightness-110">Book now</Link>
               </div>
             </article>
+           
+             {/* Pro 4*/}
+            <article className="group overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] transition hover:border-[#2563EB] hover:shadow-xl">
+              <div className="relative overflow-hidden h-70">
+                <img src="https://res.cloudinary.com/sgoy94v2/image/upload/v1792421921/bannu-online-services/workers/no1ab2vcigg1pfv6i2vo.jpg" />
+                <span className="absolute left-4 top-4 rounded-full bg-[#0B1426] px-3 py-1.5 text-xs font-semibold text-[#93B8FF]">Electrician</span>
+              </div>
+              <div className="p-5">
+                <h3 className="font-bold text-white">Janzeb kamal</h3>
+                <p className="mt-1 text-sm text-slate-500">The 15 year Experience for Electrician work
 
-            {/* Pro 4 */}
-            <article className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 backdrop-blur transition hover:border-[#2563EB]/60">
-              <div className="flex items-center gap-4">
-                <div className="serif flex h-16 w-16 items-center justify-center rounded-full border border-[#2563EB] bg-[#13213D] text-2xl font-semibold text-[#93B8FF]">KS</div>
-                <div>
-                  <h3 className="font-bold text-white">Kamran Shah</h3>
-                  <p className="text-sm text-[#93B8FF]">Plumber</p>
+ </p>
+                <div className="mt-5 flex items-center justify-between">
+                <Link to="/Userelectri" className="rounded-full bg-gradient-to-br from-blue-500 to-blue-700 px-5 py-2.5 text-xs font-bold text-white transition hover:brightness-110">Book now</Link>
                 </div>
-              </div>
-              <div className="mt-5 flex items-center gap-2 text-sm text-slate-300">
-                <span className="text-blue-500">★★★★★</span> <span>4.7</span>
-                <span className="text-slate-500">(450 jobs)</span>
-              </div>
-              <p className="mt-3 text-sm text-slate-400">9 years of experience</p>
-              <div className="mt-6 flex items-center justify-between border-t border-white/10 pt-5">
-                <div>
-                  <p className="text-xs text-slate-400">Visit charge</p>
-                  <p className="serif text-2xl font-semibold text-white">Rs. 700</p>
-                </div>
-                <Link to="/PlumberBooking" className="rounded-full bg-gradient-to-br from-blue-500 to-blue-700 px-5 py-2.5 text-xs font-bold text-white transition hover:brightness-110">Book now</Link>
               </div>
             </article>
           </div>

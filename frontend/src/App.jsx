@@ -43,6 +43,7 @@ import PlumberMap from "./Pages/PlumberMap.jsx";
 import UserAllPlumberworker from "./Pages/UserAllPlumberworker.jsx";
 import Userelectri from "./Pages/Userelectri.jsx";
 import AdminAllworker from "./Pages/AdminAllworker";
+import Allworker from "./Pages/Allworker.jsx"
 
 
 function App() {
@@ -119,6 +120,7 @@ function App() {
           <Route path="/Userelectri" element={<Userelectri/>} />
           <Route path="/AdminAllworker" element={<AdminAllworker />} />
           <Route path="/Home" element={<Home />} />
+          <Route path="/Allworker" element={<Allworker />} /> 
           
         </Routes>
       </main>

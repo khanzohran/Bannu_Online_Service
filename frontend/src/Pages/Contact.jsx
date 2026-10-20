@@ -1,8 +1,26 @@
 
-import React from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Nawber";
 
 function Contact() {
+
+  let [contact, setcontact]=useState({
+
+custamername:"",
+custamernumber:0,
+custameremail:"",
+custmerservice:"",
+custmermassage:"",
+
+  })
+   async function contactsumit() {
+    let response=await axios.post(import.meta.env.VITE_Backend_base_ULR + "/Contectroute/contactcreate",
+  contact
+)
+console.log(response.data)
+   } 
   return (
     <div className="min-h-screen bg-white text-slate-900">
 <Navbar/>
@@ -100,7 +118,7 @@ function Contact() {
               <div>
                 <h3 className="font-bold">Working Hours</h3>
                 <p className="mt-1 text-sm text-slate-600">
-                  Monday - Saturday
+                  
                   <br />
                   9:00 AM - 8:00 PM
                 </p>
@@ -123,7 +141,7 @@ function Contact() {
                 </p>
               </div>
 
-              <form className="space-y-5">
+              <div className="space-y-5">
 
                 <div className="grid gap-5 sm:grid-cols-2">
 
@@ -133,6 +151,13 @@ function Contact() {
                     </label>
 
                     <input
+                     value={contact.custamername}
+                    onChange={(event) =>
+                      setcontact({
+                        ...contact,
+                        custamername: event.target.value,
+                      })
+                    }
                       type="text"
                       placeholder="Enter your name"
                       className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3.5 outline-none transition focus:border-blue-600 focus:bg-white"
@@ -145,6 +170,13 @@ function Contact() {
                     </label>
 
                     <input
+                     value={contact.custamernumber}
+                    onChange={(event) =>
+                      setcontact({
+                        ...contact,
+                        custamernumber: event.target.value,
+                      })
+                    }
                       type="tel"
                       placeholder="03XX XXXXXXX"
                       className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3.5 outline-none transition focus:border-blue-600 focus:bg-white"
@@ -159,6 +191,13 @@ function Contact() {
                   </label>
 
                   <input
+                   value={contact.custameremail}
+                    onChange={(event) =>
+                      setcontact({
+                        ...contact,
+                        custameremail: event.target.value,
+                      })
+                    }
                     type="email"
                     placeholder="Enter your email"
                     className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3.5 outline-none transition focus:border-blue-600 focus:bg-white"
@@ -171,6 +210,13 @@ function Contact() {
                   </label>
 
                   <select
+                   value={contact.custmerservice}
+                    onChange={(event) =>
+                      setcontact({
+                        ...contact,
+                        custmerservice: event.target.value,
+                      })
+                    }
                     className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3.5 outline-none focus:border-blue-600 focus:bg-white"
                   >
                     <option>Select a service</option>
@@ -187,20 +233,28 @@ function Contact() {
                   </label>
 
                   <textarea
+                   value={contact.custmermassage}
+                    onChange={(event) =>
+                      setcontact({
+                        ...contact,
+                        custmermassage: event.target.value,
+                      })
+                    }
                     rows="5"
                     placeholder="Tell us how we can help..."
                     className="w-full resize-none rounded-xl border border-slate-200 bg-slate-50 px-4 py-3.5 outline-none transition focus:border-blue-600 focus:bg-white"
                   ></textarea>
                 </div>
 
-                <button
-                  type="submit"
-                  className="w-full rounded-xl bg-blue-700 px-6 py-4 font-semibold text-white shadow-lg transition hover:bg-blue-800"
-                >
-                  Send Message →
-                </button>
+              <button
+  type="button"
+  onClick={contactsumit}
+  className="w-full rounded-xl bg-blue-700 px-6 py-4 font-semibold text-white shadow-lg transition hover:bg-blue-800"
+>
+  Send Message →
+</button>
 
-              </form>
+              </div>
             </div>
           </div>
 

@@ -26,6 +26,7 @@ const Admin2ndsidebar = () => {
       icon: "▣",
       path: "/Adminshop",
     },
+    
   ];
 
   const goToPage = (path) => {
@@ -172,7 +173,7 @@ const Admin2ndsidebar = () => {
           </button>
             <button
             type="button"
-            onClick={() => goToPage("/AdminUsers")}
+            onClick={() => goToPage("/admincustomers")}
             className="group flex w-full items-center gap-3 rounded-xl border border-blue-500/20 bg-gradient-to-r from-neutral-900 to-slate-950 px-3 py-3 text-left transition-all duration-200 hover:border-blue-400 hover:bg-blue-900/30 sm:gap-4 sm:px-4 sm:py-4"
           >
             <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-400 to-blue-700 text-xl shadow-md sm:h-11 sm:w-11">

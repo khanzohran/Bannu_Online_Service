@@ -12,6 +12,8 @@ const Admindashbord = () => {
   const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);
   const [workers, setWorkers] = useState([]);
+  const [shops, setShops] = useState([]);
+  const [users, setUsers] = useState([]);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -28,33 +30,25 @@ const Admindashbord = () => {
     setError("");
 
     const results = await Promise.allSettled([
-      // 1. Electrical products
       axios.get(`${API}/EPcreate/EpfindApi`, {
         withCredentials: true,
       }),
-
-      // 2. Plumbing products
       axios.get(`${API}/PPcreate/PPfindApi`, {
         withCredentials: true,
       }),
-
-      // 3. Electrical orders
       axios.get(`${API}/Electerorder/orderfindApi`, {
         withCredentials: true,
       }),
-
-      // 4. Plumbing orders
       axios.get(`${API}/plumborder/orderfindApi`, {
         withCredentials: true,
       }),
-
-      // 5. Electricians
-      axios.get(`${API}/workerroute/MyElectritionFindApi`, {
+      axios.get(`${API}/workerroute/AllWorkersFindApi`, {
         withCredentials: true,
       }),
-
-      // 6. Plumbers
-      axios.get(`${API}/workerroute/MyPlumberFindApi`, {
+      axios.get(`${API}/Login/AllShopApi`, {
+        withCredentials: true,
+      }),
+      axios.get(`${API}/Login/AllCustomers`, {
         withCredentials: true,
       }),
     ]);
@@ -72,41 +66,44 @@ const Admindashbord = () => {
     };
 
     const allProducts = [
-      ...readArray(results[0], ["findobj"]).map((item) => ({
+      ...readArray(results[0], ["findobj", "products"]).map((item) => ({
         ...item,
         _category: "Electrical",
       })),
-      ...readArray(results[1], ["findobj"]).map((item) => ({
+      ...readArray(results[1], ["findobj", "products"]).map((item) => ({
         ...item,
         _category: "Plumbing",
       })),
     ];
 
     const allOrders = [
-      ...readArray(results[2], ["orderfindobj"]).map((item) => ({
+      ...readArray(results[2], ["orderfindobj", "orders"]).map((item) => ({
         ...item,
         _category: "Electrical",
       })),
-      ...readArray(results[3], ["orderfindobj"]).map((item) => ({
+      ...readArray(results[3], ["orderfindobj", "orders"]).map((item) => ({
         ...item,
         _category: "Plumbing",
       })),
     ];
 
-    const allWorkers = [
-      ...readArray(results[4], ["workers"]).map((item) => ({
-        ...item,
-        _workerType: "Electrician",
-      })),
-      ...readArray(results[5], ["workers"]).map((item) => ({
-        ...item,
-        _workerType: "Plumber",
-      })),
-    ];
+    const allWorkers = readArray(results[4], ["workers"]).map((item) => ({
+      ...item,
+      _workerType: item.Electrician
+        ? "Electrician"
+        : item.Plumber
+        ? "Plumber"
+        : "Worker",
+    }));
+
+    const allShops = readArray(results[5], ["shops"]);
+    const allUsers = readArray(results[6], ["customers"]);
 
     setProducts(allProducts);
     setOrders(allOrders);
     setWorkers(allWorkers);
+    setShops(allShops);
+    setUsers(allUsers);
 
     const failedRequests = results.filter(
       (result) => result.status === "rejected"
@@ -114,7 +111,7 @@ const Admindashbord = () => {
 
     if (failedRequests > 0) {
       setError(
-        `${failedRequests} API request(s) load nahi huay. Backend routes check karein.`
+        `${failedRequests} API request(s) load nahi huay. Backend routes aur admin login check karein.`
       );
     }
 
@@ -125,99 +122,111 @@ const Admindashbord = () => {
     fetchDashboardData();
   }, [fetchDashboardData]);
 
-  const totalElectricalProducts = products.filter(
-    (item) => item._category === "Electrical"
-  ).length;
+  const query = search.trim().toLowerCase();
 
-  const totalPlumbingProducts = products.filter(
-    (item) => item._category === "Plumbing"
-  ).length;
-
-  const totalElectricalOrders = orders.filter(
-    (item) => item._category === "Electrical"
-  ).length;
-
-  const totalPlumbingOrders = orders.filter(
-    (item) => item._category === "Plumbing"
-  ).length;
-
-  const totalElectricians = workers.filter(
-    (item) => item._workerType === "Electrician"
-  ).length;
-
-  const totalPlumbers = workers.filter(
-    (item) => item._workerType === "Plumber"
-  ).length;
-
-  const searchText = search.trim().toLowerCase();
+  const matchesSearch = (...values) =>
+    !query ||
+    values.some((value) =>
+      String(value || "").toLowerCase().includes(query)
+    );
 
   const filteredProducts = products.filter((item) =>
-    [
-      item.ProductName,
-      item.Brand,
-      item._category,
-    ].some((value) =>
-      String(value || "").toLowerCase().includes(searchText)
-    )
+    matchesSearch(item.ProductName, item.Brand, item._category)
   );
 
   const filteredOrders = orders.filter((item) =>
-    [
+    matchesSearch(
       item.ProductName,
       item.Name,
       item.Brand,
       item.phonenumber,
+      item.ContactNumber,
       item.Location,
-      item._category,
-    ].some((value) =>
-      String(value || "").toLowerCase().includes(searchText)
+      item._category
     )
   );
 
   const filteredWorkers = workers.filter((item) =>
-    [
+    matchesSearch(
       item.Name,
       item.ContactNumber,
       item._workerType,
       item.ShopLocation,
-    ].some((value) =>
-      String(value || "").toLowerCase().includes(searchText)
+      item.BelongsToShop
     )
   );
+
+  const filteredShops = shops.filter((item) =>
+    matchesSearch(item.Name, item.Email, item.Role)
+  );
+
+  const filteredUsers = users.filter((item) =>
+    matchesSearch(item.Name, item.Email, item.Role)
+  );
+
+  const electricalProducts = products.filter(
+    (item) => item._category === "Electrical"
+  ).length;
+
+  const plumbingProducts = products.filter(
+    (item) => item._category === "Plumbing"
+  ).length;
+
+  const electricalOrders = orders.filter(
+    (item) => item._category === "Electrical"
+  ).length;
+
+  const plumbingOrders = orders.filter(
+    (item) => item._category === "Plumbing"
+  ).length;
+
+  const electricians = workers.filter(
+    (item) => item._workerType === "Electrician"
+  ).length;
+
+  const plumbers = workers.filter(
+    (item) => item._workerType === "Plumber"
+  ).length;
 
   const summaryCards = [
     {
       title: "Total Products",
       count: products.length,
-      detail: `${totalElectricalProducts} Electrical · ${totalPlumbingProducts} Plumbing`,
+      detail: `${electricalProducts} Electrical · ${plumbingProducts} Plumbing`,
       icon: "📦",
-      color: "bg-blue-50 text-blue-700",
     },
     {
       title: "Total Orders",
       count: orders.length,
-      detail: `${totalElectricalOrders} Electrical · ${totalPlumbingOrders} Plumbing`,
+      detail: `${electricalOrders} Electrical · ${plumbingOrders} Plumbing`,
       icon: "🛒",
-      color: "bg-indigo-50 text-indigo-700",
     },
     {
       title: "Total Workers",
       count: workers.length,
-      detail: `${totalElectricians} Electricians · ${totalPlumbers} Plumbers`,
+      detail: `${electricians} Electricians · ${plumbers} Plumbers`,
       icon: "👷",
-      color: "bg-slate-100 text-slate-700",
+    },
+    {
+      title: "Registered Shops",
+      count: shops.length,
+      detail: "Total shop accounts",
+      icon: "🏪",
+    },
+    {
+      title: "Registered Users",
+      count: users.length,
+      detail: "Total customer accounts",
+      icon: "👥",
     },
   ];
 
   return (
     <div className="flex min-h-screen flex-col bg-slate-100 md:flex-row">
-      {/* SIDEBAR */}
       <Admin2ndsidebar />
 
-      {/* MAIN DASHBOARD */}
       <main className="min-w-0 flex-1 p-3 sm:p-5 lg:p-8">
-        <div className="mx-auto max-w-7xl">
-
+        <div className="mx-auto w-full max-w-none">
           {/* HEADER */}
           <header className="mb-6 flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:p-6">
             <div>
@@ -230,31 +239,22 @@ const Admindashbord = () => {
               </h1>
 
               <p className="mt-2 text-sm text-slate-500">
-                Products, orders aur workers ka complete overview.
+                Products, orders, workers, shops aur users ka complete overview.
               </p>
             </div>
 
-            <button
-              type="button"
-              onClick={fetchDashboardData}
-              disabled={loading}
-              className="rounded-lg bg-blue-950 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {loading ? "Loading..." : "↻ Refresh Dashboard"}
-            </button>
+           
           </header>
 
-          {/* SUMMARY CARDS — ONE ROW ON DESKTOP */}
-          <section className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {/* SUMMARY CARDS */}
+          <section className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5 ">
             {summaryCards.map((card) => (
               <article
                 key={card.title}
-                className="min-w-0 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-blue-200 hover:shadow-md"
+                className="min-w-0 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md"
               >
-                <div className="flex items-center gap-4">
-                  <div
-                    className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-2xl ${card.color}`}
-                  >
+                <div className="flex items-center gap-4 h-5">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-2xl">
                     {card.icon}
                   </div>
 
@@ -263,13 +263,13 @@ const Admindashbord = () => {
                       {card.title}
                     </p>
 
-                    <h2 className="mt-1 text-3xl font-extrabold text-slate-900">
+                    <h2 className=" text-3xl font-extrabold text-slate-900">
                       {loading ? "—" : card.count}
                     </h2>
                   </div>
                 </div>
 
-                <p className="mt-4 border-t border-slate-100 pt-3 text-xs text-slate-500">
+                <p className="mt-4 border-t border-slate-100 pt-3 text-xs text-slate-500 h-2">
                   {card.detail}
                 </p>
               </article>
@@ -277,7 +277,7 @@ const Admindashbord = () => {
           </section>
 
           {/* SEARCH */}
-          <section className="mb-6 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+          <section className="mb-6 rounded-xl border border-slate-200 bg-white p-4 shadow-sm w-100">
             <label
               htmlFor="dashboard-search"
               className="mb-2 block text-sm font-semibold text-slate-700"
@@ -290,7 +290,7 @@ const Admindashbord = () => {
               type="search"
               value={search}
               onChange={(event) => setSearch(event.target.value)}
-              placeholder="Product, customer, worker, phone..."
+              placeholder="Search products, orders, workers, shops or users..."
               className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
             />
           </section>
@@ -310,7 +310,7 @@ const Admindashbord = () => {
             </div>
           )}
 
-          {/* PRODUCTS SECTION */}
+          {/* PRODUCTS */}
           <DashboardSection
             title="Recent Products"
             subtitle="Electrical aur plumbing products"
@@ -318,10 +318,11 @@ const Admindashbord = () => {
             onViewAll={() => navigate("/AdminAllproduct")}
             loading={loading}
             emptyText="Koi product nahi mila."
+            hasItems={filteredProducts.length > 0}
           >
-            {filteredProducts.slice(0, 5).map((item) => (
+            {filteredProducts.slice(0, 5).map((item, index) => (
               <article
-                key={`${item._category}-${item._id}`}
+                key={item._id || `product-${index}`}
                 className="flex min-w-0 items-center gap-3 rounded-xl border border-slate-100 p-3 transition hover:bg-slate-50"
               >
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-slate-100">
@@ -354,7 +355,7 @@ const Admindashbord = () => {
             ))}
           </DashboardSection>
 
-          {/* ORDERS SECTION */}
+          {/* ORDERS */}
           <DashboardSection
             title="Recent Orders"
             subtitle="Electrical aur plumbing customer orders"
@@ -362,10 +363,11 @@ const Admindashbord = () => {
             onViewAll={() => navigate("/AdminAllorder")}
             loading={loading}
             emptyText="Koi order nahi mila."
+            hasItems={filteredOrders.length > 0}
           >
-            {filteredOrders.slice(0, 5).map((item) => (
+            {filteredOrders.slice(0, 5).map((item, index) => (
               <article
-                key={`${item._category}-${item._id}`}
+                key={item._id || `order-${index}`}
                 className="flex min-w-0 items-center gap-3 rounded-xl border border-slate-100 p-3 transition hover:bg-slate-50"
               >
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-xl">
@@ -382,7 +384,10 @@ const Admindashbord = () => {
                   </p>
 
                   <p className="mt-1 truncate text-xs text-slate-500">
-                    {item.phonenumber || "No phone"} · {item.Location || "No location"}
+                    {item.phonenumber ||
+                      item.ContactNumber ||
+                      "No phone"}{" "}
+                    · {item.Location || "No location"}
                   </p>
                 </div>
 
@@ -393,48 +398,133 @@ const Admindashbord = () => {
             ))}
           </DashboardSection>
 
-          {/* WORKERS SECTION */}
+          {/* WORKERS */}
           <DashboardSection
-            title="Our Workers"
-            subtitle="Electricians aur plumbers"
+            title="Registered Workers"
+            subtitle="Tamam shops ke electricians aur plumbers"
             count={filteredWorkers.length}
-            onViewAll={() => navigate("/AdminAllworker")}
+            onViewAll={() => navigate("/Allworker")}
             loading={loading}
             emptyText="Koi worker nahi mila."
+            hasItems={filteredWorkers.length > 0}
           >
-            {filteredWorkers.slice(0, 5).map((item) => (
+            {filteredWorkers.slice(0, 5).map((item, index) => {
+              const image = item.Image || item.Imageurl;
+
+              return (
+                <article
+                  key={item._id || `worker-${index}`}
+                  className="flex min-w-0 items-center gap-3 rounded-xl border border-slate-100 p-3 transition hover:bg-slate-50"
+                >
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-slate-100">
+                    {image ? (
+                      <img
+                        src={image}
+                        alt={item.Name || "Worker"}
+                        className="h-full w-full object-cover"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <span className="text-2xl">
+                        {item._workerType === "Electrician" ? "⚡" : "🔧"}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="min-w-0 flex-1">
+                    <h3 className="truncate text-sm font-bold text-slate-800">
+                      {item.Name || "Worker"}
+                    </h3>
+
+                    <p className="mt-1 text-xs text-blue-700">
+                      {item._workerType}
+                    </p>
+
+                    <p className="mt-1 truncate text-xs text-slate-500">
+                      {item.ContactNumber || "No contact number"}
+                    </p>
+                  </div>
+                </article>
+              );
+            })}
+          </DashboardSection>
+
+          {/* SHOPS */}
+          <DashboardSection
+            title="Registered Shops"
+            subtitle="Dashboard par tamam registered shop accounts"
+            count={filteredShops.length}
+            onViewAll={() => navigate("/Adminshop")}
+            loading={loading}
+            emptyText="Koi registered shop nahi mili."
+            hasItems={filteredShops.length > 0}
+          >
+            {filteredShops.slice(0, 5).map((shop, index) => (
               <article
-                key={`${item._workerType}-${item._id}`}
+                key={shop._id || `shop-${index}`}
                 className="flex min-w-0 items-center gap-3 rounded-xl border border-slate-100 p-3 transition hover:bg-slate-50"
               >
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-slate-100">
-                  {item.Image ? (
-                    <img
-                      src={item.Image}
-                      alt={item.Name || "Worker"}
-                      className="h-full w-full object-cover"
-                      loading="lazy"
-                    />
-                  ) : (
-                    <span className="text-2xl">
-                      {item._workerType === "Electrician" ? "⚡" : "🔧"}
-                    </span>
-                  )}
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-2xl">
+                  🏪
                 </div>
 
                 <div className="min-w-0 flex-1">
                   <h3 className="truncate text-sm font-bold text-slate-800">
-                    {item.Name || item._workerType}
+                    {shop.Name || "Shop name not available"}
                   </h3>
 
-                  <p className="mt-1 text-xs text-slate-500">
-                    {item._workerType}
+                  <p className="mt-1 break-all text-xs text-slate-500">
+                    {shop.Email || "Email not available"}
                   </p>
 
-                  <p className="mt-1 truncate text-xs text-slate-500">
-                    {item.ContactNumber || "No contact number"}
+                  <p className="mt-1 text-xs text-blue-700">
+                    {shop.Role || "Shop"}
                   </p>
                 </div>
+
+                <span className="shrink-0 rounded-full bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700">
+                  Shop
+                </span>
+              </article>
+            ))}
+          </DashboardSection>
+
+          {/* USERS */}
+          <DashboardSection
+            title="Registered Users"
+            subtitle="Customer accounts registered on the website"
+            count={filteredUsers.length}
+            onViewAll={() => navigate("/admincustomers")}
+            loading={loading}
+            emptyText="Koi registered user nahi mila."
+            hasItems={filteredUsers.length > 0}
+          >
+            {filteredUsers.slice(0, 5).map((user, index) => (
+              <article
+                key={user._id || `user-${index}`}
+                className="flex min-w-0 items-center gap-3 rounded-xl border border-slate-100 p-3 transition hover:bg-slate-50"
+              >
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-lg font-bold text-emerald-700">
+                  {(user.Name || "U").trim().charAt(0).toUpperCase()}
+                </div>
+
+                <div className="min-w-0 flex-1">
+                  <h3 className="truncate text-sm font-bold text-slate-800">
+                    {user.Name || "Name not available"}
+                  </h3>
+
+                  <p className="mt-1 break-all text-xs text-slate-500">
+                    {user.Email || "Email not available"}
+                  </p>
+
+                  <p className="mt-1 text-xs text-emerald-700">
+                    {user.Role || "User"}
+                  </p>
+                </div>
+
+                <span className="shrink-0 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700">
+                  User
+                </span>
               </article>
             ))}
           </DashboardSection>
@@ -449,6 +539,7 @@ const Admindashbord = () => {
   );
 };
 
+/* Reusable dashboard section */
 const DashboardSection = ({
   title,
   subtitle,
@@ -456,10 +547,9 @@ const DashboardSection = ({
   onViewAll,
   loading,
   emptyText,
+  hasItems,
   children,
 }) => {
-  const hasItems = React.Children.count(children) > 0;
-
   return (
     <section className="mb-6 min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">

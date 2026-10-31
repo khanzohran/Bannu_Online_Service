@@ -6,7 +6,8 @@ React + Vite frontend and Express/MongoDB backend.
 1. Import this project into Vercel.
 2. Set **Root Directory** to `frontend` (lowercase).
 3. Framework preset: **Vite**; Build command: `npm run build`; Output directory: `dist`.
-4. Set `VITE_Backend_base_ULR` to your deployed backend URL, without a trailing slash.
+4. Set `VITE_BACKEND_BASE_URL` to your deployed backend URL, without a trailing slash. The old `VITE_Backend_base_ULR` name is still supported for compatibility.
+5. Add the Vercel site's exact URL to the backend's `FRONTEND_URL` environment variable. The backend must be deployed and running separately; redeploy the frontend after changing its environment variables.
 
 Local frontend setup:
 ```bash

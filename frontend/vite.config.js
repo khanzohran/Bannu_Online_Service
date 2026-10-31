@@ -4,15 +4,18 @@ import tailwindcss from "@tailwindcss/vite"
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
+  const backendUrl = (
+    env.VITE_BACKEND_BASE_URL ||
+    env.VITE_Backend_base_ULR ||
+    ''
+  ).replace(/\/+$/, '')
 
   return {
     plugins: [react(),
       tailwindcss(),
     ],
     define: {
-      'import.meta.env.VITE_Backend_base_ULR': JSON.stringify(
-        (env.VITE_Backend_base_ULR || '').replace(/\/+$/, '')
-      ),
+      'import.meta.env.VITE_Backend_base_ULR': JSON.stringify(backendUrl),
     },
   }
 })

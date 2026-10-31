@@ -13,7 +13,9 @@ const Allworker = () => {
 
   const fetchWorkers = useCallback(async () => {
     if (!API) {
-      setError("Backend API URL .env file mein set nahi hai.");
+      setError(
+        "Backend URL set nahi hai. Vercel mein VITE_BACKEND_BASE_URL environment variable set karein."
+      );
       setLoading(false);
       return;
     }
@@ -56,7 +58,9 @@ const Allworker = () => {
 
       setError(
         err.response?.data?.message ||
-          err.message ||
+          (err.code === "ERR_NETWORK"
+            ? "Backend se connection nahi hua. Backend URL, CORS aur backend status check karein."
+            : err.message) ||
           "Workers load nahi huay. Backend API check karein."
       );
     } finally {

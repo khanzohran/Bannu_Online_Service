@@ -161,7 +161,7 @@ const Navbar = () => {
 
         {/* Mobile Buttons */}
         <div className="lg:hidden py-3 flex flex-wrap justify-center gap-1">
-          <button onClick={() => navigate("/")} className={mobileLinkClass}>
+          <button onClick={() => navigate("/Home")} className={mobileLinkClass}>
             Home
           </button>
 
